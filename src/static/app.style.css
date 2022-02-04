@@ -1,0 +1,10 @@
+
+:host {
+    box-shadow: 0px 1px 2px 0px rgba(151,151,151,0.75);
+}
+
+main {
+    max-width: 1200px;
+    margin: 0px auto;
+    padding: 20px;
+}

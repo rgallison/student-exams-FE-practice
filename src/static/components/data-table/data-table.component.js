@@ -14,13 +14,23 @@ class DataTable extends HTMLElement {
             ${this.header}
             <div class="table-wrapper">${this.content}</div>`;
 
-        setTimeout(this.getData.bind(this, this.getAttribute('src')), 5000);        
+        setTimeout(this.getData.bind(this, this.getAttribute('src')), 5000);
     }
 
     connectedCallback () {
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(style);
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+    }
+
+    static get observedAttributes() {
+        return ["src"];
+    }
+
+    attributeChangedCallback (name, oldVal, newVal) {
+        if (name === 'src') {
+            this.getData(newVal);
+        }
     }
 
     setContent (data) {

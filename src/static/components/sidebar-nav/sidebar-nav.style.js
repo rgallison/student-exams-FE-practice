@@ -18,6 +18,10 @@ aside {
     cursor: pointer;
 }
 
+.nav-item.current {
+    background: #ececec;
+}
+
 .dot {
     display: block;
     background: #c8c8c8;

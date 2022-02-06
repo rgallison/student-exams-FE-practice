@@ -1,7 +1,7 @@
 const style = document.createElement('style');
 
 style.textContent = `
-.table-label {
+.table-header {
     text-transform: capitalize;
     font-size: 20px;
     margin-bottom: 10px;

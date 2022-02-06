@@ -3,18 +3,22 @@ import style from './data-table.style.js'
 
 const template = document.createElement('template');
 
-class DataTable extends HTMLElement {
-    constructor() {
+export default class DataTable extends HTMLElement {
+    constructor(dataType) {
         super();
-        this.dataType = this.getAttribute('type');
-        this.header = `<div class="table-label">All ${this.dataType}</div>`
-        this.content = `<div class="table-content"><p><loading-spinner></loading-spinner>Loading ${this.dataType}</p></div>`;
-        this.tableConatinerClass = '.table-content';
+        this.dataType = dataType;
+        this.data = null;
+        this.tableHeaderClass = 'table-header';
+        this.tableContainerClass = 'table-wrapper';
         template.innerHTML = `
-            ${this.header}
-            <div class="table-wrapper">${this.content}</div>`;
+            <div class="${this.tableHeaderClass}"></div>
+            <div class="${this.tableContainerClass}"></div>`;
+    }
 
-        setTimeout(this.getData.bind(this, this.getAttribute('src')), 5000);
+    set data (data) {
+        if (data) {
+            this.setContent(data[this.dataType]);
+        }
     }
 
     connectedCallback () {
@@ -24,22 +28,25 @@ class DataTable extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ["src"];
+        return ["type","data"];
     }
 
     attributeChangedCallback (name, oldVal, newVal) {
-        if (name === 'src') {
-            this.getData(newVal);
-        }
+        switch (name) {
+            case 'type':
+                this.dataType = this.getAttribute('type');
+                this.setHeader();
+                this.setLoader();
+                break;
+        } 
     }
 
     setContent (data) {
-        this.data = data[this.dataType];
         console.log(data)
         let table = `<table><tbody>`;
         let cols = this.getAttribute('columns').split(',');
         table += cols.reduce((acc, c) => `${acc}<th>${this.transformLabel(c)}</th>`, '<tr>') + '</tr>';
-        for (let item of this.data) {
+        for (let item of data) {
             table += '<tr>';
             cols.forEach(col => {
                 table += `<td class="${col}">${this.transform(col, item[col])}</td>`
@@ -48,9 +55,22 @@ class DataTable extends HTMLElement {
         }
         table += '</tbody></table>';
 
-        let tableContainer = this.shadowRoot.querySelector(this.tableConatinerClass);
+        let tableContainer = this.shadowRoot.querySelector(`.${this.tableContainerClass}`);
         tableContainer.innerHTML = table;
-        tableContainer.dispatchEvent(new Event(this.tableConatinerClass));
+        // tableContainer.dispatchEvent(new Event(this.tableContainerClass));
+    }
+
+    setHeader () {
+        this.shadowRoot.querySelector(`.${this.tableHeaderClass}`).innerHTML =  `All ${this.dataType}`;
+    }
+
+    setLoader (){
+        let loader = `<p><loading-spinner></loading-spinner>`;
+        if (this.dataType) {
+            loader += `Loading ${this.dataType}`;
+        }
+        loader += '</p>'
+        this.shadowRoot.querySelector(`.${this.tableContainerClass}`).innerHTML = loader;
     }
 
     getData (url) {
@@ -84,7 +104,6 @@ class DataTable extends HTMLElement {
                 return type;
         }
     }
-
 }
 
 window.customElements.define('data-table', DataTable);

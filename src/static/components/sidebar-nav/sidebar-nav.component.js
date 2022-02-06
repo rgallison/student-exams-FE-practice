@@ -7,7 +7,7 @@ const tableData = {
 const template = document.createElement('template');
 template.innerHTML = `
     <aside>
-        <div class="nav-item" data-nav-to="exams">
+        <div class="nav-item exams" data-nav-to="exams">
             <span class="dot"></span>
             Exams
         </div>
@@ -29,16 +29,37 @@ class SidebarNav extends HTMLElement {
 
         this.shadowRoot.querySelectorAll('.nav-item').forEach((nav) => { 
             nav.addEventListener('click', ev => {
-                this.dispatchEvent(new CustomEvent('navigate', { 
-                    bubbles: true, 
-                    composed: true, 
-                    detail: { 
-                        navTo: nav.dataset.navTo,
-                        data: tableData[nav.dataset.navTo]
-                    }
-                }));
+                this.navigate(nav);
+
+                this.getData(tableData[nav.dataset.navTo].src, (data) => {
+                    this.dispatchEvent(new CustomEvent('populate-data', { 
+                        bubbles: true, 
+                        composed: true, 
+                        detail: { data }
+                    }));
+                })
             });
         });
+    }
+
+    navigate (nav) {
+        this.shadowRoot.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('current'));
+        nav.classList.add('current')
+        this.dispatchEvent(new CustomEvent('navigate', { 
+            bubbles: true, 
+            composed: true, 
+            detail: { 
+                navTo: nav.dataset.navTo,
+                data: tableData[nav.dataset.navTo]
+            }
+        }));
+    }
+
+    getData (url, callback) {
+        fetch(url)
+            .then(resp => resp.json())
+            .then(data => callback(data))
+            .catch(err => console.log(err));
     }
 }
 

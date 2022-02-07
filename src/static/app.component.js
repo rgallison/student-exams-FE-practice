@@ -1,14 +1,20 @@
 import './components/header-nav/header-nav.component.js';
 import './components/loading-spinner/loading-spinner.component.js';
-import DataTable from './components/data-table/data-table.component.js';
 import './components/sidebar-nav/sidebar-nav.component.js';
+import DataTable from './components/data-table/data-table.component.js';
+import utils from './js/utils.js';
+
+const tableData = {
+    exams: { src: '/api/v1/exams', columns: 'id,average,studentCount'},
+    students: { src: '/api/v1/students', columns: 'id,average' }
+}
 
 const template = document.createElement('template');
 template.innerHTML = `
     <link rel="stylesheet" href="app.style.css"/>
     <header-nav></header-nav>
     <sidebar-nav></sidebar-nav>
-    <main></main>`;
+    <main><h3>Dashboard</h3></main>`;
 
 class AppContainer extends HTMLElement {
     constructor() {
@@ -22,13 +28,32 @@ class AppContainer extends HTMLElement {
         this.shadowRoot.querySelector('main').appendChild(this.dataTable);
 
         this.addEventListener('navigate', ev => {
-            this.dataTable.setAttribute('columns', ev.detail.data.columns);
-            this.dataTable.setAttribute('type', ev.detail.navTo);
-        });
+            let navTo = ev.detail.navTo;
+            this.dataTable.setAttribute('columns', tableData[navTo].columns);
+            this.dataTable.setAttribute('src', tableData[navTo].src);
+            this.dataTable.setAttribute('type', navTo);
 
-        this.addEventListener('populate-data', ev => {
-            this.dataTable.data = ev.detail.data;
+            this.populateData(navTo);
         });
+    }
+
+    async populateData (navTo) {
+        let data = await utils.fetchData(tableData[navTo].src);
+        let processedData = await this.processData(data, navTo);
+        this.dataTable.data = processedData;
+    }
+
+    async processData (data, type) {
+        if (type === 'students') {
+            const promises = data.map(async (s) => Promise.resolve(utils.fetchData(`/api/v1/students/${s}`)));
+            let responses = await Promise.all(promises);
+            responses = responses.map((s, i) => {
+                return {id: data[i], ...s};
+            })
+            data = { students: responses };
+        }
+
+        return data;
     }
 }
 

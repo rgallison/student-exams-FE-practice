@@ -1,6 +1,11 @@
 const style = document.createElement('style');
 
 style.textContent = `
+.subtitle {
+    font-size: 65%;
+    color: #8b8b8b;
+}
+
 .table-header {
     text-transform: capitalize;
     font-size: 20px;
@@ -16,16 +21,17 @@ table {
     border-collapse: collapse;
 }
 
-table th {
-    text-transform: capitalize;
-}
-
 table th,
 table td {
     width: 33%;
     border: 1px solid #c8c8c8;
     padding: 5px 40px;
     text-align: left;
+    text-transform: capitalize;
+}
+
+table td {
+    cursor: pointer;
 }
 
 `;

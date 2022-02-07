@@ -12,11 +12,26 @@
 function getStyle(stylesheet) {
     const linkElem = document.createElement('link');
     linkElem.setAttribute('rel', 'stylesheet');
+    linkElem.setAttribute('type', 'text/css');
     linkElem.setAttribute('href', stylesheet);
 
     return linkElem;
 }
 
-export {
-    getStyle
+async function fetchData (url, callback) {
+    try {
+        let resp = await fetch(url);
+        let data = await resp.json();
+
+        if (callback){
+            callback(data);
+        }
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export default {
+    getStyle, fetchData
 }

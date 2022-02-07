@@ -9,7 +9,7 @@ template.innerHTML = `
             <span class="dot"></span>
             Exams
         </div>
-        <div class="nav-item" data-nav-to="students">
+        <div class="nav-item students" data-nav-to="students">
             <span class="dot"></span>
             Students
         </div>
@@ -32,9 +32,19 @@ class SidebarNav extends HTMLElement {
         });
     }
 
-    navigate (nav) {
+    static get observedAttributes() {
+        return ["selected"];
+    }
+
+    attributeChangedCallback (name, oldVal, newVal) {
         this.shadowRoot.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('current'));
-        nav.classList.add('current');
+        let navItem = this.shadowRoot.querySelector(`.${newVal}`)
+        if (navItem) {
+            navItem.classList.add('current');
+        }
+    }
+
+    navigate (nav) {
         this.dispatchEvent(new CustomEvent('navigate', { 
             bubbles: true, 
             composed: true, 

@@ -25,15 +25,31 @@ class AppContainer extends HTMLElement {
 
     connectedCallback () {
         this.shadowRoot.appendChild(template.content.cloneNode(true));
-        this.shadowRoot.querySelector('main').appendChild(this.dataTable);
+        this.sidebar = this.shadowRoot.querySelector('sidebar-nav');
+        this.main = this.shadowRoot.querySelector('main');
 
         this.addEventListener('navigate', ev => {
-            let navTo = ev.detail.navTo;
-            this.dataTable.setAttribute('columns', tableData[navTo].columns);
-            this.dataTable.setAttribute('src', tableData[navTo].src);
-            this.dataTable.setAttribute('type', navTo);
+            let navTo = ev.detail ? ev.detail.navTo : null;
+            this.main.innerHTML = '';
+            this.sidebar.setAttribute('selected', navTo)
+            
+            switch(navTo){
+                case 'exams':
+                case 'students':
+                    this.main.appendChild(this.dataTable);
+                    this.dataTable.setAttribute('columns', tableData[navTo].columns);
+                    this.dataTable.setAttribute('src', tableData[navTo].src);
+                    this.dataTable.setAttribute('type', navTo);
+                    this.populateData(navTo);
+                    break;
+                case 'home':
+                default:
+                    let h3 = this.main.appendChild(document.createElement('h3'));
+                    h3.textContent = 'Dashboard';
+                    break;
+            }
 
-            this.populateData(navTo);
+
         });
     }
 

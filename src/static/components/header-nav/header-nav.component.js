@@ -17,6 +17,15 @@ class HeaderNav extends HTMLElement {
     connectedCallback () {
         this.shadowRoot.appendChild(style);
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+        this.shadowRoot.querySelector('#logo').addEventListener('click', () => {
+            this.dispatchEvent(new CustomEvent('navigate', { 
+                bubbles: true, 
+                composed: true, 
+                detail: { 
+                    navTo: 'home'
+                }
+            }));
+        })
     }
 }
 

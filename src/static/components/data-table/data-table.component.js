@@ -8,6 +8,7 @@ const template = document.createElement('template');
 export default class DataTable extends HTMLElement {
     constructor(dataType) {
         super();
+        this.attachShadow({mode: 'open'});
         this.dataType = dataType;
         this.data = null;
         this.tableHeaderClass = 'table-header';
@@ -24,7 +25,6 @@ export default class DataTable extends HTMLElement {
     }
 
     connectedCallback () {
-        this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(style);
         this.shadowRoot.appendChild(template.content.cloneNode(true));
     }

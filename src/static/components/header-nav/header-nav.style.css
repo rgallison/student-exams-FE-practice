@@ -4,6 +4,7 @@ header {
 
 #logo {
     max-width: 150px;
+    cursor: pointer;
 }
 
 #logo img {

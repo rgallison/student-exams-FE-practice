@@ -5,8 +5,7 @@ import DataTable from './components/data-table/data-table.component.js';
 import utils from './js/utils.js';
 
 const tableData = {
-    exams: { src: '/api/v1/exams', columns: 'id,average,studentCount'},
-    students: { src: '/api/v1/students', columns: 'id,average' }
+    exams: { src: '/api/v1/exams', columns: 'id,average,studentCount'}
 }
 
 const template = document.createElement('template');
@@ -36,11 +35,13 @@ class AppContainer extends HTMLElement {
             switch(navTo){
                 case 'exams':
                 case 'students':
-                    this.main.appendChild(this.dataTable);
-                    this.dataTable.setAttribute('columns', tableData[navTo].columns);
-                    this.dataTable.setAttribute('src', tableData[navTo].src);
-                    this.dataTable.setAttribute('type', navTo);
-                    this.populateData(navTo);
+                    if (tableData[navTo]){
+                        this.main.appendChild(this.dataTable);
+                        this.dataTable.setAttribute('columns', tableData[navTo].columns);
+                        this.dataTable.setAttribute('src', tableData[navTo].src);
+                        this.dataTable.setAttribute('type', navTo);
+                        this.populateData(navTo);
+                    }
                     break;
                 case 'home':
                 default:

@@ -1,4 +1,7 @@
-import style from "./header-nav.style.js";
+import utils from '../../js/utils.js';
+
+const component = 'header-nav';
+const style = utils.getStyle(`components/${component}/${component}.style.css`);
 const template = document.createElement('template');
 template.innerHTML = `
     <header>
@@ -17,4 +20,4 @@ class HeaderNav extends HTMLElement {
     }
 }
 
-window.customElements.define('header-nav', HeaderNav);
+window.customElements.define(component, HeaderNav);

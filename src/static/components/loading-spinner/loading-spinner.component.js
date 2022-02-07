@@ -1,4 +1,7 @@
-import style from './loading-spinner.style.js'
+import utils from '../../js/utils.js';
+
+const component = 'loading-spinner';
+const style = utils.getStyle(`components/${component}/${component}.style.css`);
 const template = document.createElement('template');
 template.innerHTML = `
     <div class="ellipsis-loader"><div></div><div></div><div></div><div></div></div>`;
@@ -15,4 +18,4 @@ class LoadingSpinner extends HTMLElement {
     }
 }
 
-window.customElements.define('loading-spinner', LoadingSpinner);
+window.customElements.define(component, LoadingSpinner);

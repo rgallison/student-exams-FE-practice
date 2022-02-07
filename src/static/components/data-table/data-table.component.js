@@ -1,7 +1,8 @@
 import utils from '../../js/utils.js';
 import singular from '../../js/singular.js';
-import style from './data-table.style.js'
 
+const component = 'data-table';
+const style = utils.getStyle(`components/${component}/${component}.style.css`);
 const template = document.createElement('template');
 
 export default class DataTable extends HTMLElement {
@@ -136,4 +137,4 @@ export default class DataTable extends HTMLElement {
     }
 }
 
-window.customElements.define('data-table', DataTable);
+window.customElements.define(component, DataTable);

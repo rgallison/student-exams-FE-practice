@@ -1,6 +1,7 @@
 import utils from '../../js/utils.js';
 
-const style = utils.getStyle('components/sidebar-nav/sidebar-nav.style.css');
+const component = 'sidebar-nav';
+const style = utils.getStyle(`components/${component}/${component}.style.css`);
 const template = document.createElement('template');
 template.innerHTML = `
     <aside>
@@ -44,4 +45,4 @@ class SidebarNav extends HTMLElement {
     }
 }
 
-window.customElements.define('sidebar-nav', SidebarNav);
+window.customElements.define(component, SidebarNav);
